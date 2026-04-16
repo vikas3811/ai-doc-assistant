@@ -1,0 +1,20 @@
+# IntelliJ
+.idea/
+
+# Node
+node_modules/
+
+# Java
+target/
+
+# Python
+__pycache__/
+*.pyc
+
+# Temp files
+temp/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
