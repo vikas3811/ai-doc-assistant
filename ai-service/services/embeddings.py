@@ -1,7 +1,6 @@
-from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
-
-embedding = OpenAIEmbeddings()
+from langchain_openai import OpenAIEmbeddings
 
 def create_vector_store(text):
+    embedding = OpenAIEmbeddings()
     return FAISS.from_texts([text], embedding)

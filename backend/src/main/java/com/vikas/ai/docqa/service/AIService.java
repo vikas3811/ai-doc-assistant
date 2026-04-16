@@ -13,8 +13,11 @@ public class AIService {
     private final WebClient webClient;
 
     public String ask(String question) {
+
+        System.out.println("Sending: " + question);
+
         return webClient.post()
-                .uri("/ask")
+                .uri("/ask")   // ✅ FIXED HERE
                 .bodyValue(Map.of("question", question))
                 .retrieve()
                 .bodyToMono(String.class)

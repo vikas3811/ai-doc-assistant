@@ -9,5 +9,4 @@ public class AiDocAssistantApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AiDocAssistantApplication.class, args);
 	}
-
 }

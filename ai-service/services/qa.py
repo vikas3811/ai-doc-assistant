@@ -1,14 +1,12 @@
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 
-def build_qa(vector_store):
-    llm = ChatOpenAI(model="gpt-4o-mini")
+def ask_question(vector_store, question):
+    docs = vector_store.similarity_search(question)
 
-    def ask(question):
-        docs = vector_store.similarity_search(question)
-        context = " ".join([doc.page_content for doc in docs])
+    context = docs[0].page_content if docs else ""
 
-        prompt = f"Answer based on context:\n{context}\n\nQuestion: {question}"
+    llm = ChatOpenAI()
 
-        return llm.predict(prompt)
+    response = llm.invoke(f"Context: {context}\nQuestion: {question}")
 
-    return ask
+    return response.content

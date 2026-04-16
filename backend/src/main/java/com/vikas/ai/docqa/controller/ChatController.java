@@ -1,25 +1,25 @@
 package com.vikas.ai.docqa.controller;
 
-import com.vikas.ai.docqa.service.AIService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @RestController
-@RequestMapping("/api/chat")
-@RequiredArgsConstructor
+@CrossOrigin
+@RequestMapping("/api")
 public class ChatController {
 
-    private final AIService aiService;
+    @Autowired
+    private WebClient webClient;
 
-    @PostMapping
-    public ResponseEntity<?> chat(@RequestBody Map<String, String> req) {
-        String question = req.get("question");
-        return ResponseEntity.ok(aiService.ask(question));
+    @PostMapping("/chat")
+    public String chat(@RequestBody String query) {
+
+        return webClient.post()
+                .uri("http://localhost:8001/chat")
+                .bodyValue(query)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
     }
 }

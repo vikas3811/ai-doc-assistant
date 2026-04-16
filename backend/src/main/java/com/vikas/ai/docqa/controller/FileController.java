@@ -1,23 +1,36 @@
 package com.vikas.ai.docqa.controller;
 
-import com.vikas.ai.docqa.service.FileService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/api/files")
-@RequiredArgsConstructor
+@CrossOrigin
+@RequestMapping("/api")
 public class FileController {
 
-    private final FileService fileService;
+    @Autowired
+    private WebClient webClient;
 
     @PostMapping("/upload")
-    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(fileService.saveFile(file));
+    public String upload(@RequestParam("file") MultipartFile file) {
+
+        // 🔥 ADD THIS LINE HERE
+        System.out.println("Uploading file: " + file.getOriginalFilename());
+
+        MultipartBodyBuilder builder = new MultipartBodyBuilder();
+        builder.part("file", file.getResource());
+
+        return webClient.post()
+                .uri("http://localhost:8001/process")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .bodyValue(builder.build())
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
     }
 }
